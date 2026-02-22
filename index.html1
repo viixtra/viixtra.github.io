@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond the Work — Amber Ramirez</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+  --cream:#faf7f2; --warm:#f2ece0; --brown:#3d2f1f;
+  --accent:#c4622d; --accent2:#7c9e87; --muted:#9a8c7e; --border:#e8e0d4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--brown);overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;width:100%;z-index:300;
+  padding:16px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  mix-blend-mode:normal;
+  background:rgba(250,247,242,0.8);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:'Playfair Display',serif;font-size:18px;color:var(--brown);text-decoration:none;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:color .2s;}
+.nav-back:hover{color:var(--brown);}
+
+/* ── HERO: FULL VIEWPORT ── */
+.hero{
+  height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 48px;
+  position:relative;overflow:hidden;
+}
+/* big animated background words */
+.hero-bg{
+  position:absolute;inset:0;pointer-events:none;
+  display:flex;flex-direction:column;justify-content:center;
+  overflow:hidden;
+}
+.bg-word{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(80px,14vw,180px);
+  font-weight:700;font-style:italic;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(196,98,45,0.08);
+  white-space:nowrap;line-height:1;
+  animation:drift 18s ease-in-out infinite alternate;
+}
+.bg-word:nth-child(2){animation-delay:-6s;animation-duration:22s;}
+.bg-word:nth-child(3){animation-delay:-12s;animation-duration:26s;}
+@keyframes drift{0%{transform:translateX(-2%)}100%{transform:translateX(2%)}}
+
+.hero-content{position:relative;z-index:1;}
+.hero-eyebrow{
+  font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:20px;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.hero-eyebrow span{display:inline-block;width:32px;height:1px;background:var(--accent);}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  line-height:0.92;margin-bottom:40px;
+}
+.hero-title .line1{font-size:clamp(56px,9vw,120px);color:var(--brown);display:block;}
+.hero-title .line2{font-size:clamp(40px,6vw,80px);color:var(--muted);display:block;font-weight:400;}
+.hero-title .line3{font-size:clamp(56px,9vw,120px);color:var(--accent);font-style:italic;display:block;}
+
+.hero-sub{
+  font-size:16px;color:var(--muted);font-weight:300;
+  max-width:420px;line-height:1.7;
+  border-left:2px solid var(--accent);padding-left:18px;
+}
+
+/* scroll cue */
+.scroll-cue{
+  position:absolute;bottom:40px;left:48px;
+  display:flex;align-items:center;gap:10px;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);
+}
+.scroll-line{width:40px;height:1px;background:var(--muted);position:relative;overflow:hidden;}
+.scroll-line::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--accent);animation:scanline 2s ease-in-out infinite;}
+@keyframes scanline{0%{left:-100%}100%{left:100%}}
+
+/* ── MARQUEE DIVIDER ── */
+.marquee-strip{
+  background:var(--brown);padding:14px 0;overflow:hidden;white-space:nowrap;
+}
+.marquee-inner{display:inline-block;animation:marquee 20s linear infinite;}
+.marquee-inner span{margin:0 28px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(250,247,242,0.6);font-weight:500;}
+.marquee-inner span.star{color:var(--accent);font-size:18px;margin:0 8px;vertical-align:middle;}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── STATS ROW ── */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid var(--border);
+}
+.stat-cell{
+  padding:48px 36px;border-right:1px solid var(--border);
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.stat-cell:last-child{border-right:none;}
+.stat-cell:hover{background:var(--warm);}
+.stat-cell::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:100%;height:3px;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;transition:transform .4s;
+}
+.stat-cell:hover::after{transform:scaleX(1);}
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:56px;font-style:italic;color:var(--accent);
+  line-height:1;margin-bottom:8px;
+}
+.stat-label{font-size:13px;color:var(--brown);font-weight:500;margin-bottom:4px;}
+.stat-sub{font-size:11px;color:var(--muted);font-style:italic;}
+
+/* ── VALUES: FULL-BLEED ALTERNATING ── */
+.value-block{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:420px;border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+.value-block.flip{direction:rtl;}
+.value-block.flip>*{direction:ltr;}
+
+.value-visual{
+  position:relative;overflow:hidden;
+  background:var(--warm);
+  display:flex;align-items:center;justify-content:center;
+}
+.value-visual.dark{background:var(--brown);}
+.value-visual.rust{background:#8b3a1a;}
+.value-visual.sage{background:#4a6b52;}
+
+.v-num{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(120px,18vw,220px);
+  font-style:italic;font-weight:700;
+  color:rgba(255,255,255,0.07);
+  position:absolute;bottom:-20px;right:-10px;
+  line-height:1;pointer-events:none;
+}
+.v-icon{font-size:64px;position:relative;z-index:1;}
+.v-tag-visual{
+  position:absolute;top:24px;left:24px;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);font-weight:600;
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:100px;padding:4px 12px;
+}
+
+.value-text{
+  padding:56px 52px;display:flex;flex-direction:column;justify-content:center;
+}
+.value-text h3{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,3.5vw,42px);
+  line-height:1.1;color:var(--brown);margin-bottom:20px;
+}
+.value-text h3 em{font-style:italic;color:var(--accent);}
+.value-text p{font-size:15px;color:#6a5a4a;line-height:1.8;font-weight:300;margin-bottom:24px;}
+.value-pull{
+  font-family:'Playfair Display',serif;
+  font-size:17px;font-style:italic;color:var(--accent);
+  line-height:1.5;padding-top:20px;
+  border-top:1px solid var(--border);
+}
+
+/* ── INTERESTS: CORKBOARD ── */
+.collage-section{
+  padding:100px 48px;
+  position:relative;overflow:hidden;
+}
+.collage-heading{
+  margin-bottom:60px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+}
+.collage-heading h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(48px,7vw,88px);
+  line-height:0.9;color:var(--brown);
+}
+.collage-heading h2 em{font-style:italic;color:var(--accent);}
+.collage-heading p{font-size:14px;color:var(--muted);max-width:240px;line-height:1.7;font-weight:300;text-align:right;padding-bottom:8px;}
+
+/* CORKBOARD */
+.corkboard{
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(139,90,43,0.07) 28px,rgba(139,90,43,0.07) 29px),
+    repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(139,90,43,0.07) 28px,rgba(139,90,43,0.07) 29px),
+    #c8a96e;
+  background-blend-mode:multiply;
+  border-radius:20px;
+  border:10px solid #a0784a;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,0.2), 0 8px 32px rgba(61,47,31,0.15);
+  padding:60px 40px 80px;
+  position:relative;
+  /* staggered flex rows */
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+/* each row of cards */
+.cork-row{
+  display:flex;
+  justify-content:center;
+  gap:32px;
+  margin-bottom:-20px; /* overlap rows slightly */
+  position:relative;
+}
+.cork-row:nth-child(even){
+  margin-left:60px; /* offset alternate rows */
+}
+
+/* PIN */
+.s-card{
+  position:relative;
+  background:white;
+  border-radius:6px;
+  overflow:visible;
+  box-shadow:3px 4px 12px rgba(0,0,0,0.2), 1px 1px 3px rgba(0,0,0,0.1);
+  transition:transform .3s, box-shadow .3s;
+  cursor:default;
+  flex-shrink:0;
+}
+.s-card::before{
+  content:'';
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #ff6b6b, #c0392b);
+  box-shadow:0 2px 6px rgba(0,0,0,0.3);
+  z-index:20;
+}
+/* alternate pin colors */
+.s-card:nth-child(2)::before{background:radial-gradient(circle at 35% 35%,#74b9ff,#2980b9);}
+.s-card:nth-child(3)::before{background:radial-gradient(circle at 35% 35%,#a8e6cf,#27ae60);}
+.s-card.quote-card::before{background:radial-gradient(circle at 35% 35%,#ffd93d,#f39c12);}
+
+/* rotations per card */
+.s-card.pc    {width:260px;transform:rotate(-2.5deg);}
+.s-card.write {width:220px;transform:rotate(1.8deg);}
+.s-card.debate{width:240px;transform:rotate(-1.2deg);}
+.s-card.psych {width:230px;transform:rotate(2deg);}
+.s-card.lang  {width:250px;transform:rotate(-1.5deg);}
+.s-card.quote-card{width:220px;transform:rotate(1deg);height:auto;}
+.s-card.quote-card2{width:210px;transform:rotate(-2deg);height:auto;}
+
+/* HOVER: tilt + lift + overlay */
+.s-card:hover{
+  transform:rotate(0deg) scale(1.05) translateY(-6px) !important;
+  box-shadow:6px 10px 28px rgba(0,0,0,0.25);
+  z-index:50;
+}
+.s-card:hover .s-hover-overlay{opacity:1;}
+.s-card:hover .s-img-inner{filter:brightness(0.45);}
+
+/* IMAGE */
+.s-img{width:100%;overflow:hidden;border-radius:6px 6px 0 0;position:relative;}
+.s-img.h140{height:140px;}
+.s-img.h120{height:120px;}
+.s-img-inner{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:filter .3s;
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;background:var(--warm);
+}
+
+/* HOVER OVERLAY TEXT */
+.s-hover-overlay{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  padding:12px;
+  opacity:0;transition:opacity .3s;
+  pointer-events:none;
+}
+.s-hover-overlay p{
+  font-family:'Playfair Display',serif;
+  font-size:13px;font-style:italic;
+  color:white;text-align:center;line-height:1.5;
+  text-shadow:0 1px 4px rgba(0,0,0,0.4);
+}
+
+.s-body{padding:12px 14px 16px;}
+.s-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:4px;}
+.s-body h4{font-family:'Playfair Display',serif;font-size:14px;margin-bottom:4px;line-height:1.2;}
+.s-body p{font-size:11px;color:var(--muted);line-height:1.5;font-weight:300;}
+
+/* QUOTE CARDS ON BOARD */
+.quote-card .q-inner{
+  padding:16px 16px 14px;
+  min-height:0 !important;
+  height:auto !important;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.quote-card.dark-q .q-inner{background:var(--brown);border-radius:6px;}
+.quote-card.warm-q .q-inner{background:#fffef5;border:1px solid #e8dfc0;border-radius:6px;}
+.quote-card blockquote{
+  font-family:'Playfair Display',serif;
+  font-size:13px;font-style:italic;line-height:1.5;
+}
+.quote-card.dark-q blockquote{color:var(--cream);}
+.quote-card.warm-q blockquote{color:var(--brown);}
+.quote-card cite{display:block;font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-top:8px;}
+.quote-card.dark-q cite{color:rgba(255,255,255,0.4);}
+.quote-card.warm-q cite{color:var(--muted);}
+
+/* hover overlay font override — legible sans-serif */
+.s-hover-overlay p{
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;font-style:normal;font-weight:400;
+  color:white;text-align:center;line-height:1.6;
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+  letter-spacing:0.2px;
+}
+
+/* ── CLOSING ── */
+.closing{
+  min-height:60vh;
+  background:var(--brown);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:80px 48px;
+  position:relative;overflow:hidden;
+}
+.closing-bg{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.closing-bg-text{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(100px,20vw,260px);font-style:italic;
+  color:rgba(255,255,255,0.04);white-space:nowrap;
+}
+.closing h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(36px,5vw,64px);color:var(--cream);
+  line-height:1.1;margin-bottom:20px;position:relative;z-index:1;
+}
+.closing h2 em{font-style:italic;color:#e8a87c;}
+.closing p{font-size:16px;color:rgba(255,255,255,0.5);font-weight:300;max-width:400px;line-height:1.7;margin-bottom:36px;position:relative;z-index:1;}
+.closing-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--cream);color:var(--brown);
+  padding:13px 28px;border-radius:100px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  border:none;font-family:'DM Sans',sans-serif;
+  transition:all .2s;position:relative;z-index:1;
+}
+.closing-btn:hover{background:white;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2);}
+
+footer{padding:24px 48px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+footer p{font-size:12px;color:var(--muted);}
+
+@media(max-width:768px){
+  .hero{padding:0 24px;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .stat-cell{border-bottom:1px solid var(--border);}
+  .value-block,.value-block.flip{grid-template-columns:1fr;}
+  .value-visual{min-height:200px;}
+  .collage-section{padding:60px 24px;}
+  .collage-heading{flex-direction:column;gap:16px;}
+  .collage-heading p{text-align:left;}
+  .scatter{min-height:auto;}
+  .s-card{position:relative!important;width:100%!important;top:auto!important;left:auto!important;right:auto!important;transform:none!important;margin-bottom:16px;}
+  nav,footer{padding-left:24px;padding-right:24px;}
+  .closing{padding:60px 24px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">AR</a>
+  <button class="nav-back" onclick="history.back()">← Back to Portfolio</button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="bg-word">Bronx-made.</div>
+    <div class="bg-word">Forward-thinking.</div>
+    <div class="bg-word">Always building.</div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span></span>A little more about Amber</div>
+    <h1 class="hero-title">
+      <span class="line1">Beyond</span>
+      <span class="line2">the work,</span>
+      <span class="line3">there's this.</span>
+    </h1>
+    <p class="hero-sub">The résumé tells you what I can do. This page tells you who I actually am — where I come from, what drives me, and what I'm curious about.</p>
+  </div>
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span>Bronx, NY</span><span class="star">✦</span>
+    <span>Aunt of 3</span><span class="star">✦</span>
+    <span>PC Builder</span><span class="star">✦</span>
+    <span>Bilingual</span><span class="star">✦</span>
+    <span>Honors Student</span><span class="star">✦</span>
+    <span>Debate Alum</span><span class="star">✦</span>
+    <span>Creative Writer</span><span class="star">✦</span>
+    <span>Future Founder</span><span class="star">✦</span>
+    <span>Bronx, NY</span><span class="star">✦</span>
+    <span>Aunt of 3</span><span class="star">✦</span>
+    <span>PC Builder</span><span class="star">✦</span>
+    <span>Bilingual</span><span class="star">✦</span>
+    <span>Honors Student</span><span class="star">✦</span>
+    <span>Debate Alum</span><span class="star">✦</span>
+    <span>Creative Writer</span><span class="star">✦</span>
+    <span>Future Founder</span><span class="star">✦</span>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats-row">
+  <div class="stat-cell">
+    <div class="stat-num">9</div>
+    <div class="stat-label">Became an aunt</div>
+    <div class="stat-sub">3 nieces & counting ♡</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">16</div>
+    <div class="stat-label">Built first PC</div>
+    <div class="stat-sub">Still runs to this day</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">BX</div>
+    <div class="stat-label">Where it started</div>
+    <div class="stat-sub">The Bronx shaped everything</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-num">2</div>
+    <div class="stat-label">Languages fluently</div>
+    <div class="stat-sub">English & Spanish</div>
+  </div>
+</div>
+
+<!-- ── VALUES ── -->
+<div class="value-block">
+  <div class="value-visual dark">
+    <div class="v-num">01</div>
+    <div class="v-icon">🏙️</div>
+    <div class="v-tag-visual">Roots</div>
+  </div>
+  <div class="value-text">
+    <h3>Perspective from <em>the ground up.</em></h3>
+    <p>Growing up in the Bronx gave me something no classroom could — a firsthand understanding of how systems fail people, and what it takes to build something from nothing. I don't take resources for granted. I don't overlook the people who usually get overlooked. That lens follows me into every problem I touch.</p>
+    <div class="value-pull">"I know what it means to figure it out with less."</div>
+  </div>
+</div>
+
+<div class="value-block flip">
+  <div class="value-visual rust">
+    <div class="v-num">02</div>
+    <div class="v-icon">🔭</div>
+    <div class="v-tag-visual">Mindset</div>
+  </div>
+  <div class="value-text">
+    <h3>Always <em>three steps ahead.</em></h3>
+    <p>I'm not wired to just solve the problem in front of me. I'm constantly asking what comes next, what breaks at scale, where the opportunity is that nobody else sees yet. Strategy isn't a deliverable for me — it's how I think, naturally and constantly, in every room I'm in.</p>
+    <div class="value-pull">"The question after the question is usually the more interesting one."</div>
+  </div>
+</div>
+
+<div class="value-block">
+  <div class="value-visual sage">
+    <div class="v-num">03</div>
+    <div class="v-icon">👧🏽</div>
+    <div class="v-tag-visual">Purpose</div>
+  </div>
+  <div class="value-text">
+    <h3>Driven to be a <em>role model.</em></h3>
+    <p>I became an aunt at 9. Watching my three nieces grow up has been one of the most grounding experiences of my life — it keeps me accountable, ambitious, and intentional about the choices I make. I want to show them, and anyone who came from where I came from, that there is a seat at every table.</p>
+    <div class="value-pull">"Everything I build, I build with them watching."</div>
+  </div>
+</div>
+
+<div class="value-block flip">
+  <div class="value-visual dark">
+    <div class="v-num">04</div>
+    <div class="v-icon">⚡</div>
+    <div class="v-tag-visual">Work Style</div>
+  </div>
+  <div class="value-text">
+    <h3>Bias toward <em>action.</em></h3>
+    <p>I don't wait to be handed a process — I build one. Whether it was creating onboarding docs nobody asked for, identifying a workflow bottleneck and fixing it, or starting a business at 17, I move when I see something that can be better. I'd rather ship something good and iterate than wait for perfect.</p>
+    <div class="value-pull">"Done and improving beats perfect and waiting."</div>
+  </div>
+</div>
+
+<!-- ── INTERESTS COLLAGE ── -->
+<section class="collage-section">
+  <div class="collage-heading">
+    <h2>What I'm<br><em>into.</em></h2>
+    <p>The things I come back to — outside of work, between work, because of work. Curiosity doesn't clock out.</p>
+  </div>
+
+  <div class="corkboard">
+
+    <!-- ROW 1 -->
+    <div class="cork-row">
+      <div class="s-card pc">
+        <div class="s-img h140">
+          <div class="s-img-inner">🖥️</div>
+          <div class="s-hover-overlay"><p>My current specs: i9-9700K, RTX 2060, 64GB RAM. The Sims 4 is not easy on it! 😂</p></div>
+        </div>
+        <div class="s-body">
+          <div class="s-tag">Hardware</div>
+          <h4>Built My First PC at 16</h4>
+          <p>Researched every component, assembled it myself. It still runs.</p>
+        </div>
+      </div>
+
+      <div class="s-card quote-card dark-q">
+        <div class="q-inner">
+          <blockquote>"I came from a place that doesn't produce many people like me — and that's exactly why I keep going."</blockquote>
+          <cite>— Amber Ramirez</cite>
+        </div>
+      </div>
+
+      <div class="s-card write">
+        <div class="s-img h140">
+          <div class="s-img-inner">✍🏽</div>
+          <div class="s-hover-overlay"><p>I've written two novels and I'm working on a third!</p></div>
+        </div>
+        <div class="s-body">
+          <div class="s-tag">Creative Writing</div>
+          <h4>Words as a Tool</h4>
+          <p>Writing is how I process. Precision and voice show up in everything.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2 -->
+    <div class="cork-row">
+      <div class="s-card quote-card warm-q">
+        <div class="q-inner">
+          <blockquote>"Curiosity is the closest thing I have to a superpower."</blockquote>
+          <cite>— Amber Ramirez</cite>
+        </div>
+      </div>
+
+      <div class="s-card debate">
+        <div class="s-img h140">
+          <div class="s-img-inner">⚖️</div>
+          <div class="s-hover-overlay"><p>Won Rookie of the Year! 🏆</p></div>
+        </div>
+        <div class="s-body">
+          <div class="s-tag">Law & Debate</div>
+          <h4>Competed in Debate</h4>
+          <p>Arguing both sides under pressure — a skill I still use with stakeholders.</p>
+        </div>
+      </div>
+
+      <div class="s-card psych">
+        <div class="s-img h140">
+          <div class="s-img-inner">🧠</div>
+          <div class="s-hover-overlay"><p>Understanding others makes me a connector — and a better leader.</p></div>
+        </div>
+        <div class="s-body">
+          <div class="s-tag">Psychology</div>
+          <h4>Why People Do What They Do</h4>
+          <p>Human behavior is at the core of good strategy and good product.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 3 -->
+    <div class="cork-row">
+      <div class="s-card lang">
+        <div class="s-img h140">
+          <div class="s-img-inner">🌐</div>
+          <div class="s-hover-overlay"><p>I taught myself Spanish solely on Aventura's top hits 🎵</p></div>
+        </div>
+        <div class="s-body">
+          <div class="s-tag">Languages</div>
+          <h4>Fluent in English & Spanish</h4>
+          <p>Growing up bilingual in the BX means navigating cultures naturally.</p>
+        </div>
+      </div>
+
+      <div class="s-card quote-card warm-q">
+        <div class="q-inner">
+          <blockquote>"Done and improving always beats perfect and waiting."</blockquote>
+          <cite>— Amber Ramirez</cite>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CLOSING ── -->
+<section class="closing">
+  <div class="closing-bg"><div class="closing-bg-text">Amber.</div></div>
+  <h2>Now you know<br><em>the person.</em></h2>
+  <p>Ready to see the work? Let's go back to the portfolio.</p>
+  <button class="closing-btn" onclick="history.back()">← Back to Portfolio</button>
+</section>
+
+<footer>
+  <p>Amber Ramirez · 2025</p>
+  <p style="font-size:11px;color:var(--muted);font-style:italic;">Designed & built from scratch</p>
+</footer>
+
+</body>
+</html>
