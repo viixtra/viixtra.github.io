@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAVA Bikes Marketplace Simulation — Amber Ramirez</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap');
+
+:root {
+  --cream:#faf7f2; --warm:#f2ece0; --brown:#3d2f1f;
+  --accent:#c4622d; --accent2:#7c9e87; --muted:#9a8c7e; --border:#e8e0d4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--brown);}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,247,242,0.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-family:'Playfair Display',serif;font-size:18px;color:var(--brown);text-decoration:none;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);text-decoration:none;font-weight:500;transition:color .2s;}
+.nav-back:hover{color:var(--brown);}
+.nav-back svg{transition:transform .2s;}
+.nav-back:hover svg{transform:translateX(-3px);}
+
+/* HERO */
+.hero{
+  padding:80px 48px 64px;
+  border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:1fr auto;
+  gap:48px;align-items:end;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;bottom:-30px;right:-20px;
+  font-family:'Playfair Display',serif;font-size:200px;
+  color:rgba(196,98,45,0.04);line-height:1;
+  pointer-events:none;user-select:none;
+}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:16px;}
+.hero-eyebrow span{display:inline-block;width:24px;height:1px;background:var(--accent);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,60px);line-height:1.05;margin-bottom:20px;color:var(--brown);}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-desc{font-size:16px;color:var(--muted);max-width:560px;line-height:1.7;font-weight:300;margin-bottom:32px;}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{padding:10px 22px;border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-dark{background:var(--brown);color:var(--cream);}
+.btn-dark:hover{background:#2a1f12;transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--brown);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--brown);transform:translateY(-1px);}
+
+/* META CARDS */
+.hero-meta{display:flex;flex-direction:column;gap:12px;padding-bottom:4px;}
+.meta-card{background:white;border:1px solid var(--border);border-radius:12px;padding:14px 18px;min-width:180px;}
+.meta-card-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:600;margin-bottom:4px;}
+.meta-card-value{font-size:13px;color:var(--brown);font-weight:500;line-height:1.4;}
+.meta-card.highlight{background:var(--accent);border-color:var(--accent);}
+.meta-card.highlight .meta-card-label{color:rgba(255,255,255,.7);}
+.meta-card.highlight .meta-card-value{color:white;}
+
+/* CONTENT WRAP */
+.wrap{max-width:900px;margin:0 auto;}
+.section{padding:60px 48px;border-bottom:1px solid var(--border);}
+.section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:12px;}
+.section h2{font-family:'Playfair Display',serif;font-size:32px;color:var(--brown);margin-bottom:20px;line-height:1.2;}
+.section h2 em{font-style:italic;color:var(--accent);}
+.body-text{font-size:15px;color:#5a4a3a;line-height:1.8;font-weight:300;margin-bottom:16px;}
+.body-text strong{font-weight:600;color:var(--brown);}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px;}
+.stat-card{background:white;border:1px solid var(--border);border-radius:14px;padding:22px;text-align:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:36px;color:var(--accent);line-height:1;margin-bottom:6px;}
+.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600;}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;margin-top:8px;}
+.tl-item{display:grid;grid-template-columns:100px 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--border);align-items:start;}
+.tl-item:last-child{border-bottom:none;}
+.tl-q{font-family:'Playfair Display',serif;font-size:28px;color:rgba(196,98,45,.25);font-style:italic;line-height:1;text-align:right;padding-right:24px;border-right:2px solid var(--border);}
+.tl-q.active{color:var(--accent);border-right-color:var(--accent);}
+.tl-content h4{font-size:15px;font-weight:600;color:var(--brown);margin-bottom:6px;}
+.tl-content p{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300;}
+.tl-tag{display:inline-block;font-size:10px;color:var(--accent2);background:rgba(124,158,135,.1);border:1px solid rgba(124,158,135,.25);border-radius:100px;padding:3px 10px;margin-top:8px;font-weight:600;}
+.tl-tag.warn{color:var(--accent);background:rgba(196,98,45,.08);border-color:rgba(196,98,45,.2);}
+
+/* MY CONTRIBUTION */
+.contrib-section{
+  background:linear-gradient(180deg,var(--cream) 0%,#ede5d8 40%,#e4d8c8 100%);
+  padding:60px 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.contrib-wrap{max-width:900px;margin:0 auto;padding:0 48px;}
+.contrib-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:12px;}
+.contrib-title{font-family:'Playfair Display',serif;font-size:32px;color:var(--brown);margin-bottom:8px;line-height:1.2;}
+.contrib-title em{font-style:italic;color:var(--accent);}
+.contrib-sub{font-size:14px;color:var(--muted);margin-bottom:40px;font-weight:300;}
+.contrib-card{
+  background:rgba(255,255,255,.7);
+  border:1px solid rgba(210,195,175,.5);
+  border-radius:20px;padding:36px;
+  margin-bottom:20px;
+  backdrop-filter:blur(4px);
+  box-shadow:0 2px 12px rgba(61,47,31,.05);
+}
+.contrib-card-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--brown);margin-bottom:6px;}
+.contrib-card-desc{font-size:13px;color:var(--muted);font-weight:300;margin-bottom:24px;}
+.contrib-body{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.contrib-text p{font-size:13px;color:#6a5a4a;line-height:1.7;font-weight:300;margin-bottom:14px;}
+.contrib-text p strong{font-weight:600;color:var(--brown);}
+.contrib-features{background:var(--warm);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.contrib-features-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:16px;}
+.contrib-feature{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;}
+.contrib-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:6px;}
+.contrib-feature p{font-size:13px;color:#6a5a4a;line-height:1.5;font-weight:300;}
+
+/* PRODUCTS GRID */
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;}
+.product-card{background:white;border:1px solid var(--border);border-radius:14px;padding:22px;transition:transform .2s,box-shadow .2s;}
+.product-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(61,47,31,.08);}
+.product-card h4{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:4px;color:var(--brown);}
+.product-card .price{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px;}
+.product-card p{font-size:12px;color:var(--muted);line-height:1.6;font-weight:300;}
+.product-tag{display:inline-block;font-size:10px;color:var(--accent2);background:rgba(124,158,135,.1);border:1px solid rgba(124,158,135,.25);border-radius:100px;padding:3px 10px;margin-top:10px;font-weight:600;}
+.product-tag.speed{color:#7c7cce;background:rgba(124,124,206,.1);border-color:rgba(124,124,206,.25);}
+.product-tag.rec{color:var(--accent2);}
+.product-tag.mountain{color:#a87c4a;background:rgba(168,124,74,.1);border-color:rgba(168,124,74,.25);}
+
+/* FINDINGS */
+.findings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.finding-card{border-radius:16px;padding:28px;position:relative;overflow:hidden;}
+.finding-card.dark{background:var(--brown);}
+.finding-card.warm{background:var(--warm);border:1px solid var(--border);}
+.finding-card.accent{background:rgba(196,98,45,.08);border:1px solid rgba(196,98,45,.2);}
+.finding-card.sage{background:rgba(124,158,135,.1);border:1px solid rgba(124,158,135,.25);}
+.finding-num{font-family:'Playfair Display',serif;font-size:56px;font-style:italic;opacity:.15;position:absolute;top:12px;right:16px;line-height:1;}
+.finding-card h4{font-size:16px;font-weight:600;margin-bottom:8px;position:relative;z-index:1;}
+.finding-card.dark h4{color:var(--cream);}
+.finding-card.warm h4,.finding-card.accent h4,.finding-card.sage h4{color:var(--brown);}
+.finding-card p{font-size:13px;line-height:1.7;font-weight:300;position:relative;z-index:1;}
+.finding-card.dark p{color:rgba(255,255,255,.65);}
+.finding-card.warm p,.finding-card.accent p,.finding-card.sage p{color:#6a5a4a;}
+
+/* BOTTOM LINE */
+.bottom-line{
+  background:var(--brown);border-radius:20px;padding:40px 48px;
+  margin-top:32px;text-align:center;
+}
+.bottom-line p{font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--cream);line-height:1.5;}
+.bottom-line p em{color:#e8a87c;font-style:normal;}
+
+/* TAGS */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.tag{font-size:11px;color:var(--muted);background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-weight:500;}
+
+footer{padding:24px 48px;text-align:center;font-size:12px;color:var(--muted);border-top:1px solid var(--border);}
+
+@media(max-width:640px){
+  .hero{grid-template-columns:1fr;padding:60px 24px 40px;}
+  .hero-meta{flex-direction:row;flex-wrap:wrap;}
+  .stat-row,.products-grid,.findings-grid,.contrib-body{grid-template-columns:1fr 1fr;}
+  .section,nav,.contrib-wrap{padding-left:24px;padding-right:24px;}
+  .tl-item{grid-template-columns:60px 1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">AR</a>
+  <a href="index.html" class="nav-back">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Portfolio
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg">🚲</div>
+  <div>
+    <div class="hero-eyebrow"><span></span>Business Strategy · P&L Management · Brand Development</div>
+    <h1>NAVA Bikes:<br>Marketplace<br><em>Simulation</em></h1>
+    <p class="hero-desc">A six-quarter competitive business simulation where I served as President of Overall Leadership — directing cross-functional strategy, building the NAVA brand from scratch, and steering the company from startup losses to a 925% profit increase in a single quarter.</p>
+    <div class="hero-btns">
+      <a href="index.html#projects" class="btn btn-ghost">← All Projects</a>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-card"><div class="meta-card-label">Course</div><div class="meta-card-value">Marketplace Business Simulation</div></div>
+    <div class="meta-card"><div class="meta-card-label">Team</div><div class="meta-card-value">Anthony, Aubrey, Isabel, Amber, Hanna</div></div>
+    <div class="meta-card"><div class="meta-card-label">Competitors</div><div class="meta-card-value">8 rival companies · 4 global markets</div></div>
+    <div class="meta-card highlight"><div class="meta-card-label">My Role</div><div class="meta-card-value">President of Overall Leadership</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- THE SIMULATION -->
+  <div class="section">
+    <div class="section-label">The Setup</div>
+    <h2>Build a bike company. <em>Beat seven others.</em></h2>
+    <p class="body-text">The Marketplace simulation placed our team — NAVA — against seven competing companies across four global markets: Amsterdam, Bangalore, Rio de Janeiro, and New York City. Over six quarters, we made real business decisions every round: which products to build, what to price them, where to sell, how to advertise, and how to allocate a finite budget across competing priorities.</p>
+    <p class="body-text">Every decision had consequences that showed up in the next quarter's financials and market share data. There was no safety net — just the data, the competition, and the clock.</p>
+
+    <div class="stat-row" style="margin-top:28px;">
+      <div class="stat-card">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Quarters Competed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">925%</div>
+        <div class="stat-label">Profit Increase (Q3)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3,864</div>
+        <div class="stat-label">Total Units Sold</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">$4.17M</div>
+        <div class="stat-label">Total Sales Revenue</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGY -->
+  <div class="section">
+    <div class="section-label">The Strategy</div>
+    <h2>How we built NAVA <em>quarter by quarter.</em></h2>
+    <p class="body-text">Our go-to-market strategy was deliberate: enter recreation first where demand was highest and proven, then layer in new segments and markets as we built financial stability. Each quarter required us to re-evaluate based on competitor moves and actual sales data.</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-q">Q2</div>
+        <div class="tl-content">
+          <h4>Amsterdam Launch — Recreation First</h4>
+          <p>Debuted NAVASorella ($1,050) targeting recreation riders in Amsterdam, the market with the highest recreation demand at 6,830 units of 12-month potential. Established brand identity and initial market presence.</p>
+          <span class="tl-tag">Market Entry</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-q">Q3</div>
+        <div class="tl-content">
+          <h4>NAVAComfort Launch + Bangalore Expansion</h4>
+          <p>Released NAVAComfort ($850) specifically targeting recreation riders — it ended up appealing to both recreation and mountain segments, likely due to marketing. Expanded into Bangalore, second-highest recreation market and most cost-effective to enter. Sales of comfort bikes increased 315% quarter-over-quarter.</p>
+          <span class="tl-tag">Product Expansion</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-q active">Q4</div>
+        <div class="tl-content">
+          <h4>NAVASpeed Launch — Speed Segment Entry</h4>
+          <p>Released NAVASpeed ($1,250) to break into the speed segment. Q4 delivered our best ad results — improved ad quality drove a measurable positive relationship with demand. Profits increased 925% this quarter, our biggest single-quarter improvement.</p>
+          <span class="tl-tag">925% Profit Jump</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-q">Q5</div>
+        <div class="tl-content">
+          <h4>Rio de Janeiro Entry</h4>
+          <p>Expanded into Rio de Janeiro — a fairly inexpensive market to enter with solid mountain and speed demand. Continued optimizing ad spend and product positioning based on competitive intelligence and quarterly performance data.</p>
+          <span class="tl-tag">Geographic Expansion</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-q">Q6</div>
+        <div class="tl-content">
+          <h4>NYC Entry + Full Product Line</h4>
+          <p>Entered New York City — the most expensive market but top in both mountain and speed demand. Launched three additional bikes simultaneously: NAVARacer ($1,300), NAVA Adventurer ($1,200), and NAVA Cloud ($875), bringing our full lineup to six models across all three segments.</p>
+          <span class="tl-tag">Full Market Presence</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="section">
+    <div class="section-label">The Product Line</div>
+    <h2>Six bikes. Three segments. <em>One brand.</em></h2>
+    <p class="body-text">Every product decision — name, price, target segment, release timing — was deliberate. We built toward a full lineup that covered recreation, mountain, and speed while maintaining a coherent brand identity across all six models.</p>
+    <div class="products-grid">
+      <div class="product-card">
+        <h4>NAVASorella</h4>
+        <div class="price">$1,050 · $50 rebate</div>
+        <p>First bike released. Our market entry product targeting recreation riders in Amsterdam. Named to convey identity — "Sorella" meaning sister in Italian.</p>
+        <span class="product-tag rec">Recreation</span>
+      </div>
+      <div class="product-card">
+        <h4>NAVAComfort</h4>
+        <div class="price">$850 · $50 rebate</div>
+        <p>2nd bike, released Q3. Targeted recreation but crossed over into mountain — best-selling model at 535 units. Highest brand profit at $200K.</p>
+        <span class="product-tag rec">Recreation</span>
+      </div>
+      <div class="product-card">
+        <h4>NAVASpeed</h4>
+        <div class="price">$1,250 · $50 rebate</div>
+        <p>3rd bike, released Q4. Our speed segment entry. Ad quality improvements in Q4 drove strongest marketing effectiveness results of the simulation.</p>
+        <span class="product-tag speed">Speed</span>
+      </div>
+      <div class="product-card">
+        <h4>NAVARacer</h4>
+        <div class="price">$1,300 · $50 rebate</div>
+        <p>Released Q6. Top-priced model targeting speed segment. 1,064 units sold — highest volume in the lineup. $687K gross margin.</p>
+        <span class="product-tag speed">Speed</span>
+      </div>
+      <div class="product-card">
+        <h4>NAVA Adventurer</h4>
+        <div class="price">$1,200 · $50 rebate</div>
+        <p>Released Q6. Mountain segment entry. 647 units sold. Pushed out to expand segment coverage as we entered NYC's high mountain demand market.</p>
+        <span class="product-tag mountain">Mountain</span>
+      </div>
+      <div class="product-card">
+        <h4>NAVA Cloud</h4>
+        <div class="price">$875 · $45 rebate</div>
+        <p>Released Q6. Recreation/accessible entry point. 1,061 units sold. Highest profit margin percentage in the lineup at 49%.</p>
+        <span class="product-tag rec">Recreation</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MY CONTRIBUTION -->
+<div class="contrib-section">
+  <div class="contrib-wrap">
+    <div class="contrib-label">✦ My Contribution</div>
+    <div class="contrib-title">I ran the <em>whole operation.</em></div>
+    <p class="contrib-sub">As President of Overall Leadership, I wasn't responsible for one function — I was responsible for the decisions that cut across all of them.</p>
+
+    <div class="contrib-card">
+      <div class="contrib-card-title">🎯 Cross-Functional Decision Making</div>
+      <div class="contrib-card-desc">Directing strategy across product, marketing, finance, and market expansion simultaneously.</div>
+      <div class="contrib-body">
+        <div class="contrib-text">
+          <p>Every quarter involved synthesizing data from multiple functions — sales performance, ad effectiveness, competitor moves, cost structures — and making calls that affected the whole business. No decision existed in isolation.</p>
+          <p><strong>The hardest calls</strong> were timing decisions: when to expand into a new market, when to release a new product, and when to hold position and optimize rather than chase competitors. Entering NYC in Q6 required weighing market potential against the cost of entry and our available capital.</p>
+          <p>I also drove the quarterly analysis process — identifying areas of growth, flagging areas of concern, and framing the strategic questions the team needed to answer each round.</p>
+        </div>
+        <div class="contrib-features">
+          <div class="contrib-features-title">Key Decisions Owned</div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Market entry sequencing — Amsterdam → Bangalore → Rio → NYC</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Product release timing across six quarters</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Segment prioritization — recreation first, then mountain and speed</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Competitive response strategy based on quarterly data</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Budget allocation across marketing, R&D, and operations</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contrib-card">
+      <div class="contrib-card-title">🎨 Brand Identity & Positioning</div>
+      <div class="contrib-card-desc">Building NAVA as a coherent brand — not just a collection of products.</div>
+      <div class="contrib-body">
+        <div class="contrib-text">
+          <p>I owned NAVA's brand identity from the ground up — the name, the mission, the visual direction, and the product naming system. The brand needed to feel like a real company, not a simulation team.</p>
+          <p><strong>The mission:</strong> "Ride freely, Ride Nava." — built around themes of exploration, freedom, and accessibility. Every product name extended the brand narrative: Sorella (sisterhood), Comfort (ease), Speed, Racer, Adventurer, Cloud — each name communicating a rider identity.</p>
+          <p>Consistent brand messaging across ads also drove results — ad quality improvements late in the simulation showed a clear positive relationship with demand, validating that brand coherence matters even in a competitive market.</p>
+        </div>
+        <div class="contrib-features">
+          <div class="contrib-features-title">Brand Work</div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Named the company: NAVA — evoking newness and movement</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Wrote the mission statement and brand positioning</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Developed full product naming system across six bikes</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Directed visual identity and messaging consistency</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Managed rider identity correlation per segment</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contrib-card">
+      <div class="contrib-card-title">📊 Quarterly Analysis & Strategic Pivots</div>
+      <div class="contrib-card-desc">Using data to make the next quarter smarter than the last.</div>
+      <div class="contrib-body">
+        <div class="contrib-text">
+          <p>Each quarter I produced a structured performance analysis — balanced scorecard breakdown, sales by product, ad effectiveness, competitive positioning, and a clear set of strategic questions for the team to answer before the next round.</p>
+          <p><strong>Key pivot moments:</strong> recognizing that NAVAComfort's crossover appeal into mountain was an opportunity, not an accident — and doubling down on that segment earlier. Identifying that ad quality (not ad volume) was the real driver of demand, which led to reducing inserts and investing in better creative.</p>
+          <p>By Q6 we held 9% total market share, with NAVARacer and NAVA Cloud each selling over 1,000 units and a cumulative balanced scorecard score of 51.2 — putting us in the top half of all competitors.</p>
+        </div>
+        <div class="contrib-features">
+          <div class="contrib-features-title">Analysis Outputs</div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Quarterly balanced scorecard breakdowns</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Competitive intelligence reports on rival strategies</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Ad effectiveness analysis — quality vs. volume tradeoff</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Market demand modeling by segment and city</p></div>
+          <div class="contrib-feature"><div class="contrib-dot"></div><p>Strategic question framing for team decision sessions</p></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- FINDINGS -->
+  <div class="section">
+    <div class="section-label">Key Takeaways</div>
+    <h2>What six quarters of competition <em>actually taught.</em></h2>
+    <div class="findings-grid">
+      <div class="finding-card dark">
+        <div class="finding-num">1</div>
+        <h4>Timing beats speed.</h4>
+        <p>Entering markets too early without capital or product-market fit cost competitors. Our sequenced expansion — proving each market before the next — kept us financially stable while building toward a full presence.</p>
+      </div>
+      <div class="finding-card accent">
+        <div class="finding-num">2</div>
+        <h4>Quality over volume in marketing.</h4>
+        <p>We had the most inserts early on but weak ad quality. Once we improved creative quality late in the simulation, demand responded immediately. More spend on bad ads just amplifies the problem.</p>
+      </div>
+      <div class="finding-card sage">
+        <div class="finding-num">3</div>
+        <h4>Brand coherence is a competitive asset.</h4>
+        <p>Competitors treated each product as independent. NAVA had a unified identity — mission, naming system, visual direction — and that consistency made our marketing more effective and our positioning clearer to customers.</p>
+      </div>
+      <div class="finding-card warm">
+        <div class="finding-num">4</div>
+        <h4>Data from one quarter is strategy for the next.</h4>
+        <p>The teams that won didn't just react — they built analytical habits. Reading NAVAComfort's mountain crossover early and building a mountain strategy around it was the kind of insight that compounds over six rounds.</p>
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <p>"Running a company — even a simulated one —<br>means every decision is <em>someone else's problem</em><br>if you don't own the whole picture."</p>
+    </div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="section" style="border-bottom:none;">
+    <div class="section-label">Skills Applied</div>
+    <h2>Built with</h2>
+    <div class="tags-wrap">
+      <span class="tag">P&L Management</span>
+      <span class="tag">Competitive Strategy</span>
+      <span class="tag">Brand Development</span>
+      <span class="tag">Market Entry Strategy</span>
+      <span class="tag">Product Pricing</span>
+      <span class="tag">Balanced Scorecard</span>
+      <span class="tag">Cross-functional Leadership</span>
+      <span class="tag">Marketing Effectiveness Analysis</span>
+      <span class="tag">Quarterly Performance Reporting</span>
+      <span class="tag">Market Segmentation</span>
+      <span class="tag">Competitive Intelligence</span>
+    </div>
+
+    <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="index.html#projects" class="btn btn-dark">← Back to Projects</a>
+    </div>
+  </div>
+
+</div>
+<footer>Designed & built by Amber Ramirez · 2026</footer>
+</body>
+</html>
