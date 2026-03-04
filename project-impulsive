@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predicting Impulsive Shoppers — Amber Ramirez</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap');
+
+:root {
+  --cream:#faf7f2; --warm:#f2ece0; --brown:#3d2f1f;
+  --accent:#c4622d; --accent2:#7c9e87; --muted:#9a8c7e; --border:#e8e0d4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--brown);}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,247,242,0.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-family:'Playfair Display',serif;font-size:18px;color:var(--brown);text-decoration:none;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);text-decoration:none;font-weight:500;transition:color .2s;}
+.nav-back:hover{color:var(--brown);}
+.nav-back svg{transition:transform .2s;}
+.nav-back:hover svg{transform:translateX(-3px);}
+
+/* HERO */
+.hero{
+  padding:80px 48px 64px;
+  border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:1fr auto;
+  gap:48px;align-items:end;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;bottom:-30px;right:-20px;
+  font-family:'Playfair Display',serif;font-size:200px;
+  color:rgba(196,98,45,0.04);line-height:1;
+  pointer-events:none;user-select:none;
+}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:16px;}
+.hero-eyebrow span{display:inline-block;width:24px;height:1px;background:var(--accent);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,60px);line-height:1.05;margin-bottom:20px;color:var(--brown);}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-desc{font-size:16px;color:var(--muted);max-width:560px;line-height:1.7;font-weight:300;margin-bottom:32px;}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{padding:10px 22px;border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-dark{background:var(--brown);color:var(--cream);}
+.btn-dark:hover{background:#2a1f12;transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--brown);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--brown);transform:translateY(-1px);}
+
+/* META CARDS */
+.hero-meta{display:flex;flex-direction:column;gap:12px;padding-bottom:4px;}
+.meta-card{background:white;border:1px solid var(--border);border-radius:12px;padding:14px 18px;min-width:180px;}
+.meta-card-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:600;margin-bottom:4px;}
+.meta-card-value{font-size:13px;color:var(--brown);font-weight:500;line-height:1.4;}
+
+/* CONTENT WRAP */
+.wrap{max-width:900px;margin:0 auto;}
+.section{padding:60px 48px;border-bottom:1px solid var(--border);}
+.section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:12px;}
+.section h2{font-family:'Playfair Display',serif;font-size:32px;color:var(--brown);margin-bottom:20px;line-height:1.2;}
+.section h2 em{font-style:italic;color:var(--accent);}
+.body-text{font-size:15px;color:#5a4a3a;line-height:1.8;font-weight:300;margin-bottom:16px;}
+.body-text strong{font-weight:600;color:var(--brown);}
+
+/* DATASETS */
+.dataset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;}
+.dataset-card{background:white;border:1px solid var(--border);border-radius:14px;padding:22px;transition:transform .2s,box-shadow .2s;}
+.dataset-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(61,47,31,.08);}
+.dataset-icon{font-size:28px;margin-bottom:12px;}
+.dataset-card h4{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:6px;color:var(--brown);}
+.dataset-card p{font-size:12px;color:var(--muted);line-height:1.6;font-weight:300;}
+.dataset-tag{display:inline-block;font-size:10px;color:var(--accent2);background:rgba(124,158,135,.1);border:1px solid rgba(124,158,135,.25);border-radius:100px;padding:3px 10px;margin-top:10px;font-weight:600;}
+
+/* APPROACH STEPS */
+.steps{display:flex;flex-direction:column;gap:0;margin-top:8px;}
+.step{display:grid;grid-template-columns:48px 1fr;gap:20px;padding:24px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{font-family:'Playfair Display',serif;font-size:32px;color:rgba(196,98,45,.2);font-style:italic;line-height:1;}
+.step h4{font-size:15px;font-weight:600;color:var(--brown);margin-bottom:6px;}
+.step p{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300;}
+
+/* FINDINGS */
+.findings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.finding-card{border-radius:16px;padding:28px;position:relative;overflow:hidden;}
+.finding-card.dark{background:var(--brown);color:var(--cream);}
+.finding-card.warm{background:var(--warm);border:1px solid var(--border);}
+.finding-card.accent{background:rgba(196,98,45,.08);border:1px solid rgba(196,98,45,.2);}
+.finding-card.sage{background:rgba(124,158,135,.1);border:1px solid rgba(124,158,135,.25);}
+.finding-num{font-family:'Playfair Display',serif;font-size:56px;font-style:italic;opacity:.15;position:absolute;top:12px;right:16px;line-height:1;}
+.finding-card h4{font-size:16px;font-weight:600;margin-bottom:8px;position:relative;z-index:1;}
+.finding-card.dark h4{color:var(--cream);}
+.finding-card.warm h4,.finding-card.accent h4,.finding-card.sage h4{color:var(--brown);}
+.finding-card p{font-size:13px;line-height:1.7;font-weight:300;position:relative;z-index:1;}
+.finding-card.dark p{color:rgba(255,255,255,.65);}
+.finding-card.warm p,.finding-card.accent p,.finding-card.sage p{color:#6a5a4a;}
+
+/* RESULTS TABLE */
+.results-wrap{overflow-x:auto;margin-top:8px;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;padding:10px 16px;text-align:left;border-bottom:2px solid var(--border);}
+td{font-size:13px;color:#5a4a3a;padding:12px 16px;border-bottom:1px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+.td-highlight{font-weight:600;color:var(--accent2);}
+.td-model{font-weight:500;color:var(--brown);}
+
+/* TWO-TYPE SECTION */
+.two-type{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.type-card{border-radius:16px;padding:28px;border:1px solid var(--border);background:white;}
+.type-card h4{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:16px;color:var(--brown);}
+.type-card h4 em{font-style:italic;color:var(--accent);}
+.type-list{list-style:none;}
+.type-list li{font-size:13px;color:#6a5a4a;line-height:1.7;padding-left:18px;position:relative;margin-bottom:4px;font-weight:300;}
+.type-list li::before{content:'◆';position:absolute;left:0;color:var(--accent);font-size:7px;top:6px;}
+
+/* BOTTOM LINE */
+.bottom-line{
+  background:var(--brown);border-radius:20px;padding:40px 48px;
+  margin-top:32px;text-align:center;
+}
+.bottom-line p{font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--cream);line-height:1.5;}
+.bottom-line p em{color:#e8a87c;font-style:normal;}
+
+/* SKILL TAGS */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.tag{font-size:11px;color:var(--muted);background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-weight:500;}
+
+footer{padding:24px 48px;text-align:center;font-size:12px;color:var(--muted);border-top:1px solid var(--border);}
+
+@media(max-width:640px){
+  .hero{grid-template-columns:1fr;padding:60px 24px 40px;}
+  .hero-meta{flex-direction:row;flex-wrap:wrap;}
+  .dataset-grid,.findings-grid,.two-type{grid-template-columns:1fr;}
+  .section,nav{padding-left:24px;padding-right:24px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">AR</a>
+  <a href="index.html" class="nav-back">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Portfolio
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg">🛒</div>
+  <div>
+    <div class="hero-eyebrow"><span></span>Machine Learning · Python · Data Mining</div>
+    <h1>Predicting<br><em>Impulsive</em><br>Online Shoppers</h1>
+    <p class="hero-desc">Can we predict which online shoppers are likely to make impulsive purchases — and what actually drives them? We analyzed three real-world datasets across behavioral, psychological, and platform dimensions to find out.</p>
+    <div class="hero-btns">
+      <a href="https://github.com/viixtra/impulsive-shoppers-analysis" target="_blank" class="btn btn-dark">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        View on GitHub
+      </a>
+      <a href="index.html#projects" class="btn btn-ghost">← All Projects</a>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-card"><div class="meta-card-label">Course</div><div class="meta-card-value">MISM3515 Data Mining</div></div>
+    <div class="meta-card"><div class="meta-card-label">Team</div><div class="meta-card-value">Amber, Annika, Candy</div></div>
+    <div class="meta-card"><div class="meta-card-label">Models</div><div class="meta-card-value">KNN · Logistic Regression · Decision Tree · Random Forest</div></div>
+    <div class="meta-card"><div class="meta-card-label">Datasets</div><div class="meta-card-value">3 real-world datasets</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- THE QUESTION -->
+  <div class="section">
+    <div class="section-label">The Business Question</div>
+    <h2>Why does any of this <em>matter?</em></h2>
+    <p class="body-text">Impulse buying drives a significant portion of e-commerce revenue — but it's notoriously hard to predict and even harder to influence strategically. Companies spend millions on promotions hoping to trigger impulsive purchases, often without understanding <strong>who</strong> actually buys impulsively or <strong>why</strong>.</p>
+    <p class="body-text">We approached this as a real business problem: if we could build a model that reliably predicts impulsive buyers, companies could personalize promotions, optimize conversion rates, and design better digital experiences — all grounded in data rather than guesswork.</p>
+  </div>
+
+  <!-- DATASETS -->
+  <div class="section">
+    <div class="section-label">The Data</div>
+    <h2>Three datasets, <em>three angles.</em></h2>
+    <p class="body-text">Rather than relying on a single dataset, we analyzed impulsive buying from three distinct perspectives — behavioral, psychological, and platform-driven — to build a more complete picture.</p>
+    <div class="dataset-grid">
+      <div class="dataset-card">
+        <div class="dataset-icon">🛍️</div>
+        <h4>Consumer Shopping Behavior</h4>
+        <p>~3,900 records of purchase history, demographics, and discount usage. Used to predict behavioral impulsivity from observable actions.</p>
+        <span class="dataset-tag">Behavioral</span>
+      </div>
+      <div class="dataset-card">
+        <div class="dataset-icon">🧠</div>
+        <h4>Mendeley E-Paylater Survey</h4>
+        <p>306 respondents answered Likert-scale questions on self-control, happiness, social influence, and promotion sensitivity.</p>
+        <span class="dataset-tag">Psychological</span>
+      </div>
+      <div class="dataset-card">
+        <div class="dataset-icon">📱</div>
+        <h4>Vietnamese TikTok Shopping</h4>
+        <p>Survey data on platform-driven impulsive buying behavior among TikTok users — scarcity, trust, hedonic motivation.</p>
+        <span class="dataset-tag">Platform-Driven</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPROACH -->
+  <div class="section">
+    <div class="section-label">The Approach</div>
+    <h2>No explicit labels? <em>We built our own.</em></h2>
+    <p class="body-text">None of the datasets came with a pre-labeled "impulsive buyer" column. A core part of this project was engineering meaningful target variables from scratch — which required thinking carefully about what impulsive behavior actually looks like in data.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h4>Engineer the Target Variable</h4>
+          <p>For the behavioral dataset, a shopper was labeled impulsive if they shopped monthly or more (or above-average prior purchases) AND used a discount or promo code — capturing both frequency and incentive-triggered buying. For survey datasets, we computed mean Likert scores and applied a 3.5 threshold.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h4>Clean & Prepare the Data</h4>
+          <p>Converted categorical frequency strings to numeric monthly equivalents. Aggregated Likert items into psychological constructs to reduce multicollinearity. One-hot encoded categorical variables. Dropped data leakage columns carefully.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h4>Train & Tune Four Models</h4>
+          <p>Built KNN, Logistic Regression (full, forward, backward selection), Decision Tree, and Random Forest classifiers. Used GridSearchCV with 5-fold cross-validation, optimizing for F1 score — because missing an impulsive buyer (false negative) carries the highest business cost.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h4>Translate Results into Strategy</h4>
+          <p>Evaluated not just model performance, but what the results tell us about impulsive buyer behavior — then connected those insights to concrete marketing and segmentation recommendations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="section">
+    <div class="section-label">Model Performance</div>
+    <h2>Behavioral data <em>wins.</em></h2>
+    <p class="body-text">The behavioral dataset was by far the strongest performer — actions leave visible traces that models can learn from. Psychological data proved much harder to model, largely because self-reported survey responses are noisy and impulsivity is often unconscious.</p>
+
+    <p style="font-size:12px;color:var(--muted);margin:20px 0 8px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Behavioral Dataset Results</p>
+    <div class="results-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>F1 (Test)</th><th>Accuracy</th><th>Precision</th><th>Recall</th></tr></thead>
+        <tbody>
+          <tr><td class="td-model">Logistic Regression (Forward)</td><td class="td-highlight">0.75</td><td>0.83</td><td>0.76</td><td>0.74</td></tr>
+          <tr><td class="td-model">Decision Tree (Tuned)</td><td class="td-highlight">0.78</td><td>0.87</td><td>0.98</td><td>0.65</td></tr>
+          <tr><td class="td-model">Random Forest (Tuned)</td><td class="td-highlight">0.78</td><td>0.87</td><td>0.97</td><td>0.65</td></tr>
+          <tr><td class="td-model">KNN (Tuned)</td><td>0.69</td><td>0.82</td><td>0.82</td><td>0.59</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:12px;color:var(--muted);margin:24px 0 8px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Psychological Dataset Results (Mendeley)</p>
+    <div class="results-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>F1 (Test)</th><th>Accuracy</th><th>Precision</th><th>Recall</th></tr></thead>
+        <tbody>
+          <tr><td class="td-model">Logistic Regression (Backward)</td><td class="td-highlight">0.55</td><td>0.79</td><td>0.69</td><td>0.46</td></tr>
+          <tr><td class="td-model">Decision Tree (Tuned)</td><td>0.52</td><td>0.76</td><td>0.57</td><td>0.47</td></tr>
+          <tr><td class="td-model">KNN (Tuned)</td><td>0.46</td><td>0.73</td><td>0.53</td><td>0.41</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FINDINGS -->
+  <div class="section">
+    <div class="section-label">Key Findings</div>
+    <h2>What we actually <em>learned.</em></h2>
+    <div class="findings-grid">
+      <div class="finding-card dark">
+        <div class="finding-num">1</div>
+        <h4>Behavior predicts. Psychology explains.</h4>
+        <p>Behavioral signals — purchase frequency, subscription status, promo code usage — are reliably predictive. Psychological data tells you the motivation behind the behavior but is harder to classify cleanly.</p>
+      </div>
+      <div class="finding-card accent">
+        <div class="finding-num">2</div>
+        <h4>Subscription status is the #1 signal.</h4>
+        <p>Across the behavioral dataset, subscription status was the most important feature in Random Forest models. Repeat, subscribed customers are the most impulse-prone group by a significant margin.</p>
+      </div>
+      <div class="finding-card sage">
+        <div class="finding-num">3</div>
+        <h4>Promotion sensitivity drives psychology.</h4>
+        <p>In the Mendeley psychological dataset, promotion sensitivity was the strongest predictor. Low self-control and positive emotions (happiness) also consistently increased impulsive buying tendency.</p>
+      </div>
+      <div class="finding-card warm">
+        <div class="finding-num">4</div>
+        <h4>Impulsivity exists on a spectrum.</h4>
+        <p>Low recall across psychological models suggests impulsivity isn't a clean binary — many buyers are only impulsive under specific emotional or contextual conditions, making them harder to classify from static data.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <p class="body-text">Two distinct impulsive buyer profiles emerged consistently across models:</p>
+      <div class="two-type">
+        <div class="type-card">
+          <h4>Predictable <em>Impulsives</em></h4>
+          <ul class="type-list">
+            <li>Frequent buyers with consistent purchase history</li>
+            <li>Highly responsive to promotions and discounts</li>
+            <li>Subscription-heavy — already engaged</li>
+            <li>Easy to identify and target proactively</li>
+          </ul>
+        </div>
+        <div class="type-card">
+          <h4>Situational <em>Impulsives</em></h4>
+          <ul class="type-list">
+            <li>Irregular buyers with no clear behavioral history</li>
+            <li>Triggered by mood, emotion, or context</li>
+            <li>Platform and social influence dependent</li>
+            <li>Timing-dependent — harder to predict in advance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <p>"Behavior tells you <em>who</em> to target.<br>Psychology tells you <em>how</em> to influence them."</p>
+    </div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="section" style="border-bottom:none;">
+    <div class="section-label">Tools & Skills</div>
+    <h2>Built with</h2>
+    <div class="tags-wrap">
+      <span class="tag">Python</span>
+      <span class="tag">pandas</span>
+      <span class="tag">scikit-learn</span>
+      <span class="tag">matplotlib</span>
+      <span class="tag">seaborn</span>
+      <span class="tag">KNN</span>
+      <span class="tag">Logistic Regression</span>
+      <span class="tag">Decision Tree</span>
+      <span class="tag">Random Forest</span>
+      <span class="tag">GridSearchCV</span>
+      <span class="tag">Feature Engineering</span>
+      <span class="tag">Data Cleaning</span>
+      <span class="tag">Business Strategy</span>
+    </div>
+
+    <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://github.com/viixtra/impulsive-shoppers-analysis" target="_blank" class="btn btn-dark">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        View Code on GitHub
+      </a>
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </div>
+
+</div>
+<footer>Designed & built by Amber Ramirez · 2025</footer>
+</body>
+</html>
