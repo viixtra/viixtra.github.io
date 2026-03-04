@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Husky Restaurant Review Database — Amber Ramirez</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap');
+
+:root {
+  --cream:#faf7f2; --warm:#f2ece0; --brown:#3d2f1f;
+  --accent:#c4622d; --accent2:#7c9e87; --muted:#9a8c7e; --border:#e8e0d4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--brown);}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--cream);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,247,242,0.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-family:'Playfair Display',serif;font-size:18px;color:var(--brown);text-decoration:none;}
+.nav-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);text-decoration:none;font-weight:500;transition:color .2s;}
+.nav-back:hover{color:var(--brown);}
+.nav-back svg{transition:transform .2s;}
+.nav-back:hover svg{transform:translateX(-3px);}
+
+/* HERO */
+.hero{
+  padding:80px 48px 64px;
+  border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:1fr auto;
+  gap:48px;align-items:end;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;bottom:-30px;right:-20px;
+  font-family:'Playfair Display',serif;font-size:200px;
+  color:rgba(196,98,45,0.04);line-height:1;
+  pointer-events:none;user-select:none;
+}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:16px;}
+.hero-eyebrow span{display:inline-block;width:24px;height:1px;background:var(--accent);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,60px);line-height:1.05;margin-bottom:20px;color:var(--brown);}
+.hero h1 em{font-style:italic;color:var(--accent);}
+.hero-desc{font-size:16px;color:var(--muted);max-width:560px;line-height:1.7;font-weight:300;margin-bottom:32px;}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{padding:10px 22px;border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-dark{background:var(--brown);color:var(--cream);}
+.btn-dark:hover{background:#2a1f12;transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--brown);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--brown);transform:translateY(-1px);}
+
+/* META CARDS */
+.hero-meta{display:flex;flex-direction:column;gap:12px;padding-bottom:4px;}
+.meta-card{background:white;border:1px solid var(--border);border-radius:12px;padding:14px 18px;min-width:180px;}
+.meta-card-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:600;margin-bottom:4px;}
+.meta-card-value{font-size:13px;color:var(--brown);font-weight:500;line-height:1.4;}
+
+/* CONTENT WRAP */
+.wrap{max-width:900px;margin:0 auto;}
+.section{padding:60px 48px;border-bottom:1px solid var(--border);}
+.section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:12px;}
+.section h2{font-family:'Playfair Display',serif;font-size:32px;color:var(--brown);margin-bottom:20px;line-height:1.2;}
+.section h2 em{font-style:italic;color:var(--accent);}
+.body-text{font-size:15px;color:#5a4a3a;line-height:1.8;font-weight:300;margin-bottom:16px;}
+.body-text strong{font-weight:600;color:var(--brown);}
+
+/* ENTITY GRID */
+.entity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;}
+.entity-card{background:white;border:1px solid var(--border);border-radius:14px;padding:22px;transition:transform .2s,box-shadow .2s;}
+.entity-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(61,47,31,.08);}
+.entity-icon{font-size:28px;margin-bottom:12px;}
+.entity-card h4{font-family:'Playfair Display',serif;font-size:16px;margin-bottom:6px;color:var(--brown);}
+.entity-card p{font-size:12px;color:var(--muted);line-height:1.6;font-weight:300;}
+.entity-tag{display:inline-block;font-size:10px;color:var(--accent2);background:rgba(124,158,135,.1);border:1px solid rgba(124,158,135,.25);border-radius:100px;padding:3px 10px;margin-top:10px;font-weight:600;}
+
+/* DESIGN DECISIONS */
+.steps{display:flex;flex-direction:column;gap:0;margin-top:8px;}
+.step{display:grid;grid-template-columns:48px 1fr;gap:20px;padding:24px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{font-family:'Playfair Display',serif;font-size:32px;color:rgba(196,98,45,.2);font-style:italic;line-height:1;}
+.step h4{font-size:15px;font-weight:600;color:var(--brown);margin-bottom:6px;}
+.step p{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300;}
+
+/* QUERIES */
+.query-block{background:var(--brown);border-radius:16px;padding:28px;margin-bottom:16px;}
+.query-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:600;margin-bottom:8px;}
+.query-desc{font-size:14px;color:rgba(255,255,255,.75);margin-bottom:16px;font-weight:300;line-height:1.6;}
+pre{font-family:'Courier New',monospace;font-size:12px;color:#e8c99a;line-height:1.7;overflow-x:auto;white-space:pre;}
+
+/* FINDINGS */
+.findings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.finding-card{border-radius:16px;padding:28px;position:relative;overflow:hidden;}
+.finding-card.dark{background:var(--brown);color:var(--cream);}
+.finding-card.warm{background:var(--warm);border:1px solid var(--border);}
+.finding-card.accent{background:rgba(196,98,45,.08);border:1px solid rgba(196,98,45,.2);}
+.finding-card.sage{background:rgba(124,158,135,.1);border:1px solid rgba(124,158,135,.25);}
+.finding-num{font-family:'Playfair Display',serif;font-size:56px;font-style:italic;opacity:.15;position:absolute;top:12px;right:16px;line-height:1;}
+.finding-card h4{font-size:16px;font-weight:600;margin-bottom:8px;position:relative;z-index:1;}
+.finding-card.dark h4{color:var(--cream);}
+.finding-card.warm h4,.finding-card.accent h4,.finding-card.sage h4{color:var(--brown);}
+.finding-card p{font-size:13px;line-height:1.7;font-weight:300;position:relative;z-index:1;}
+.finding-card.dark p{color:rgba(255,255,255,.65);}
+.finding-card.warm p,.finding-card.accent p,.finding-card.sage p{color:#6a5a4a;}
+
+/* BOTTOM LINE */
+.bottom-line{
+  background:var(--brown);border-radius:20px;padding:40px 48px;
+  margin-top:32px;text-align:center;
+}
+.bottom-line p{font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--cream);line-height:1.5;}
+.bottom-line p em{color:#e8a87c;font-style:normal;}
+
+/* TAGS */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.tag{font-size:11px;color:var(--muted);background:white;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-weight:500;}
+
+footer{padding:24px 48px;text-align:center;font-size:12px;color:var(--muted);border-top:1px solid var(--border);}
+
+@media(max-width:640px){
+  .hero{grid-template-columns:1fr;padding:60px 24px 40px;}
+  .hero-meta{flex-direction:row;flex-wrap:wrap;}
+  .entity-grid,.findings-grid{grid-template-columns:1fr;}
+  .section,nav{padding-left:24px;padding-right:24px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">AR</a>
+  <a href="index.html" class="nav-back">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Portfolio
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg">🍜</div>
+  <div>
+    <div class="hero-eyebrow"><span></span>SQL · Oracle DB · Database Design</div>
+    <h1>Husky<br>Restaurant<br><em>Review</em> Database</h1>
+    <p class="hero-desc">A full relational database built from scratch — from entity relationships and normalization to a live, queryable Oracle schema supporting users, restaurants, reviews, reservations, and recommendations.</p>
+    <div class="hero-btns">
+      <a href="https://github.com/viixtra/huskyrestaurantreview" target="_blank" class="btn btn-dark">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        View on GitHub
+      </a>
+      <a href="index.html#projects" class="btn btn-ghost">← All Projects</a>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-card"><div class="meta-card-label">Course</div><div class="meta-card-value">MISM3403 Database Management</div></div>
+    <div class="meta-card"><div class="meta-card-label">Team</div><div class="meta-card-value">Amber Ramirez · Group 5</div></div>
+    <div class="meta-card"><div class="meta-card-label">Database</div><div class="meta-card-value">Oracle DB · 10 Tables</div></div>
+    <div class="meta-card"><div class="meta-card-label">Normalization</div><div class="meta-card-value">3NF · ER Diagram · DDL/DML</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- THE PROBLEM -->
+  <div class="section">
+    <div class="section-label">The Problem</div>
+    <h2>Why does a restaurant platform need a <em>real database?</em></h2>
+    <p class="body-text">Managing restaurant data, user reviews, reservations, and recommendations at any real scale quickly becomes unmanageable without structure. Without a proper relational database, data gets duplicated, relationships break down, and querying becomes unreliable.</p>
+    <p class="body-text">This project tackles that problem end-to-end — starting from a business need, identifying every entity and relationship required, and building a fully normalized schema in Oracle DB that enforces data integrity by design rather than by hope.</p>
+  </div>
+
+  <!-- ENTITIES -->
+  <div class="section">
+    <div class="section-label">The Schema</div>
+    <h2>Ten tables, <em>one coherent system.</em></h2>
+    <p class="body-text">The database was designed to handle every part of the platform — who the users are, what restaurants exist, how they're categorized, and all the interactions between them.</p>
+    <div class="entity-grid">
+      <div class="entity-card">
+        <div class="entity-icon">👤</div>
+        <h4>Users & CreditCards</h4>
+        <p>User profiles with unique email and phone. Credit cards linked via FK with cascading delete on user removal.</p>
+        <span class="entity-tag">Core Identity</span>
+      </div>
+      <div class="entity-card">
+        <div class="entity-icon">🏢</div>
+        <h4>Company & Restaurant</h4>
+        <p>Companies own multiple restaurants. Each restaurant stores location, hours, cuisine type, and activity status.</p>
+        <span class="entity-tag">Core Inventory</span>
+      </div>
+      <div class="entity-card">
+        <div class="entity-icon">🍽️</div>
+        <h4>Restaurant Subtypes</h4>
+        <p>SitDown, TakeOut, and FoodCart each extend the base Restaurant table with type-specific attributes.</p>
+        <span class="entity-tag">Supertype/Subtype</span>
+      </div>
+      <div class="entity-card">
+        <div class="entity-icon">⭐</div>
+        <h4>Reviews</h4>
+        <p>User-written ratings from 0.0–5.0 per restaurant, with auto-timestamping on creation.</p>
+        <span class="entity-tag">User Content</span>
+      </div>
+      <div class="entity-card">
+        <div class="entity-icon">📅</div>
+        <h4>Reservations</h4>
+        <p>Time-based bookings with start/end timestamps and party size. Constrained to party sizes greater than zero.</p>
+        <span class="entity-tag">Transactions</span>
+      </div>
+      <div class="entity-card">
+        <div class="entity-icon">👍</div>
+        <h4>Recommendations</h4>
+        <p>Binary Y/N endorsements, stored separately from reviews — because recommending and reviewing are distinct actions.</p>
+        <span class="entity-tag">Endorsements</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN DECISIONS -->
+  <div class="section">
+    <div class="section-label">Design Decisions</div>
+    <h2>The choices that made the schema <em>actually work.</em></h2>
+    <p class="body-text">Good database design isn't just about getting the tables right — it's about the decisions that hold the whole system together when data gets messy or scale increases.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h4>Supertype/Subtype Pattern for Restaurant Categories</h4>
+          <p>Rather than cramming all restaurant types into one table with nullable columns, the base Restaurant table holds shared attributes while SitDownRestaurant, TakeOutRestaurant, and FoodCartRestaurant each extend it with only the fields that apply — Capacity, MaxWaitTime, and Licensed respectively. Cleaner, more normalized, and easier to query by type.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h4>Cascading Deletes on CreditCard → Users</h4>
+          <p>If a user account is deleted, their associated credit card records are automatically removed via ON DELETE CASCADE. This prevents orphaned payment data from persisting in the system — a data integrity decision that mirrors real-world platform behavior.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h4>CHECK Constraints to Enforce Data Quality</h4>
+          <p>Rating is constrained to 0.0–5.0. ActivityStatus only accepts 'Active' or 'Closed'. FoodType is limited to five cuisine categories. RecommendedFlag only accepts 'Y' or 'N'. These constraints mean invalid data never enters the database, regardless of how it's inserted.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <h4>Recommendations Decoupled from Reviews</h4>
+          <p>A separate Recommendation table captures binary endorsements independently of written reviews. This reflects how real platforms actually work — a user might recommend a restaurant without leaving a written review, or vice versa. Collapsing them into one table would force artificial constraints on user behavior.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUERIES -->
+  <div class="section">
+    <div class="section-label">Queries</div>
+    <h2>Three business questions, <em>answered in SQL.</em></h2>
+    <p class="body-text">The queries were designed to demonstrate real use cases — not just that the schema works, but that it can power actual product decisions.</p>
+
+    <div class="query-block">
+      <div class="query-label">Query 1 — Active Restaurant Directory</div>
+      <div class="query-desc">Retrieve all currently active restaurants — the core feed any restaurant platform surfaces to users.</div>
+      <pre>SELECT RestaurantName, City, FoodType
+FROM Restaurant
+WHERE ActivityStatus = 'Active';</pre>
+    </div>
+
+    <div class="query-block">
+      <div class="query-label">Query 2 — Reviewer Activity Report</div>
+      <div class="query-desc">Join users, reviews, and restaurants to surface who reviewed what and at what rating — useful for moderation and engagement analytics.</div>
+      <pre>SELECT U.FirstName || ' ' || U.LastName AS Reviewer,
+       R.RestaurantName,
+       RV.Rating
+FROM Review RV
+JOIN Users U ON RV.UserID = U.UserID
+JOIN Restaurant R ON RV.RestaurantID = R.RestaurantID;</pre>
+    </div>
+
+    <div class="query-block">
+      <div class="query-label">Query 3 — Large Party Reservations</div>
+      <div class="query-desc">Filter reservations by party size to help restaurants prepare for larger groups — with formatted timestamps for readability.</div>
+      <pre>SELECT U.FirstName || ' ' || U.LastName AS Guest,
+       R.RestaurantName,
+       RS.PartySize,
+       TO_CHAR(RS.StartTimestamp, 'YYYY-MM-DD HH24:MI') AS ReservationStart
+FROM Reservation RS
+JOIN Users U ON RS.UserID = U.UserID
+JOIN Restaurant R ON RS.RestaurantID = R.RestaurantID
+WHERE RS.PartySize > 2;</pre>
+    </div>
+  </div>
+
+  <!-- FINDINGS -->
+  <div class="section">
+    <div class="section-label">Key Takeaways</div>
+    <h2>What this project actually <em>taught.</em></h2>
+    <div class="findings-grid">
+      <div class="finding-card dark">
+        <div class="finding-num">1</div>
+        <h4>Structure prevents problems you haven't thought of yet.</h4>
+        <p>Constraints, cascading rules, and normalization aren't just academic — they're what stops bad data from compounding silently over time.</p>
+      </div>
+      <div class="finding-card accent">
+        <div class="finding-num">2</div>
+        <h4>Modeling decisions reflect real product thinking.</h4>
+        <p>Separating Recommendations from Reviews wasn't a technical requirement — it was a product decision about how users actually behave on a platform.</p>
+      </div>
+      <div class="finding-card sage">
+        <div class="finding-num">3</div>
+        <h4>Normalization is about eliminating assumptions.</h4>
+        <p>3NF forces you to make every dependency explicit. That process of elimination is where you find the hidden assumptions baked into your original design.</p>
+      </div>
+      <div class="finding-card warm">
+        <div class="finding-num">4</div>
+        <h4>Good queries require good schema.</h4>
+        <p>The multi-table joins in the business queries were only clean and readable because the schema was designed with relationships in mind from the start.</p>
+      </div>
+    </div>
+
+    <div class="bottom-line">
+      <p>"A database is only as powerful as<br>the <em>decisions</em> behind its design."</p>
+    </div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="section" style="border-bottom:none;">
+    <div class="section-label">Tools & Skills</div>
+    <h2>Built with</h2>
+    <div class="tags-wrap">
+      <span class="tag">SQL</span>
+      <span class="tag">Oracle DB</span>
+      <span class="tag">DDL / DML</span>
+      <span class="tag">ER Diagramming</span>
+      <span class="tag">Relational Schema Design</span>
+      <span class="tag">3NF Normalization</span>
+      <span class="tag">Foreign Keys</span>
+      <span class="tag">CHECK Constraints</span>
+      <span class="tag">Cascading Deletes</span>
+      <span class="tag">Multi-table JOINs</span>
+      <span class="tag">Data Modeling</span>
+    </div>
+
+    <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://github.com/viixtra/huskyrestaurantreview" target="_blank" class="btn btn-dark">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        View Code on GitHub
+      </a>
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </div>
+
+</div>
+<footer>Designed & built by Amber Ramirez · 2026</footer>
+</body>
+</html>
